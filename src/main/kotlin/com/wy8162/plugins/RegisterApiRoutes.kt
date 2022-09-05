@@ -39,7 +39,7 @@ private fun Route.apiV1Route() {
             }
 
             call.respond(ctx.httpStatus, ctx.apiResponse)
-            call.application.log.info("${call.request.uri} (${time}ms)")
+            call.application.log.info("${call.request.uri} ($time)")
         }
         get("/{userId}") {
             val ctx = ApiContext(call = call)
@@ -49,7 +49,7 @@ private fun Route.apiV1Route() {
             }
 
             call.respond(ctx.httpStatus, ctx.apiResponse)
-            call.application.log.info("${call.request.uri} (${time}ms)")
+            call.application.log.info("${call.request.uri} ($time)")
         }
         post("/login") {
             val ctx = ApiContext(call = call)
@@ -59,7 +59,7 @@ private fun Route.apiV1Route() {
             }
 
             call.respond(ctx.httpStatus, ctx.apiResponse)
-            call.application.log.info("${call.request.uri} (${time}ms)")
+            call.application.log.info("${call.request.uri} ($time)")
         }
 
         authenticate("auth-jwt") {

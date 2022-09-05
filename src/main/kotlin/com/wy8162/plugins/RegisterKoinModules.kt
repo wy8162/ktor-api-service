@@ -2,6 +2,11 @@ package com.wy8162.plugins
 
 import com.wy8162.config.httpClientInstance
 import com.wy8162.controller.UserController
+import com.wy8162.controller.HrController
+import com.wy8162.service.DatabaseService
+import com.wy8162.service.DatabaseServiceImpl
+import com.wy8162.service.HrService
+import com.wy8162.service.HrServiceImpl
 import com.wy8162.service.UserService
 import com.wy8162.service.UserServiceImpl
 import io.ktor.server.application.Application
@@ -24,6 +29,9 @@ fun Application.registerKoinModules() {
 val koinModule = module {
     singleOf(::UserController)
     singleOf(::UserServiceImpl) bind UserService::class
+    singleOf(::HrController)
+    singleOf(::HrServiceImpl) bind HrService::class
+    singleOf(::DatabaseServiceImpl) bind DatabaseService::class
     single { PrometheusMeterRegistry(PrometheusConfig.DEFAULT) }
     single { httpClientInstance() }
 }

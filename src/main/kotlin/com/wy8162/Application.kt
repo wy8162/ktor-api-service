@@ -5,6 +5,7 @@ import com.wy8162.config.initializeDatabase
 import com.wy8162.plugins.registerApiModule
 import com.wy8162.plugins.registerApiV1Routes
 import com.wy8162.plugins.registerErrorHandlingModule
+import com.wy8162.plugins.registerHrApiV1Routes
 import com.wy8162.plugins.registerKoinModules
 import com.wy8162.plugins.registerMonitoringModule
 import com.wy8162.plugins.registerSecurityModule
@@ -23,6 +24,7 @@ fun main() {
             registerApiModule()
             registerMonitoringModule()
             registerApiV1Routes()
+            registerHrApiV1Routes()
             registerErrorHandlingModule()
             initializeDatabase()
             registerSecurityModule()

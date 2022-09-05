@@ -4,6 +4,7 @@ import arrow.core.Either
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.wy8162.config.AppConfig
+import com.wy8162.config.ROLE_USER
 import com.wy8162.error.InvalidUserIdException
 import com.wy8162.error.UnauthorizedAccessException
 import com.wy8162.model.ApiContext
@@ -52,7 +53,7 @@ class UserController(
             .withAudience(AppConfig.CFG().getString("jwt.audience"))
             .withIssuer(AppConfig.CFG().getString("jwt.issuer"))
             .withClaim("username", loginRequest.username)
-            .withClaim("role", "admin")
+            .withClaim("role", ROLE_USER)
             .withExpiresAt(Date(System.currentTimeMillis() + 60000))
             .sign(Algorithm.HMAC256(AppConfig.CFG().getString("jwt.secret")))
 
