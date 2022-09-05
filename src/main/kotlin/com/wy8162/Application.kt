@@ -1,4 +1,4 @@
-package com.wy8162
+package com.wy8162 // ktlint-disable filename
 
 import com.wy8162.config.AppConfig
 import com.wy8162.config.initializeDatabase
@@ -7,6 +7,7 @@ import com.wy8162.plugins.registerApiV1Routes
 import com.wy8162.plugins.registerErrorHandlingModule
 import com.wy8162.plugins.registerKoinModules
 import com.wy8162.plugins.registerMonitoringModule
+import com.wy8162.plugins.registerSecurityModule
 import io.ktor.server.engine.applicationEngineEnvironment
 import io.ktor.server.engine.connector
 import io.ktor.server.engine.embeddedServer
@@ -24,6 +25,7 @@ fun main() {
             registerApiV1Routes()
             registerErrorHandlingModule()
             initializeDatabase()
+            registerSecurityModule()
         }
 
         connector {
