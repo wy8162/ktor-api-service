@@ -41,3 +41,101 @@ $ java -javaagent:/app/opentelemetry-javaagent.jar \
 -jar /app/app.jar
 ```
 
+== Building Microservice with Ktor
+=== Why Ktor
+*https://ktor.io[Lightweight and Flexible]*
+_Ktor allows you to use only what you need, and to structure your application the way you need it. In addition, you can also extend Ktor with your own plugin very easily._
+
+*https://ktor.io[Kotlin and Coroutines]* _Ktor is built from the ground up using Kotlin and Coroutines. You get to use a concise, multiplatform language, as well as the power of asynchronous programming with an intuitive imperative flow._
+
+Ktor runs on top of different non-block and async engines:
+
+. Netty
+. CIO
+. Jetty
+. etc
+
+Based on my test, Netty is much more stable and also faster than CIO.
+
+=== Async, Non-Blocking and Event Driven
+Ktor applications built based on engines including Netty, CIO, etc are async and event driven. Coroutines make programing non-blocking async straight forward and easy.
+
+- Async - the response can come at anytime and in any order.
+- Non-blocking - there is no need to wait until the process is finished, i.e., waiting for data from network socket.
+- Event driven - the requester for service gets notification once the processing is done.
+
+=== Application Architecture
+A typical Ktor applications consists of the following components:
+
+. Ktor engine which is the server to be bundled as a self-contained package. There are a few options including Netty, Jetty, CIO and even Tomcat.
+. Plugins which are the modules or components of the Ktor application. Ktor plugins installs the features needed. For examples, content negotiations, security, routes, error handling, HTTP client, metrics, etc.
+. Routing which iss used to organize the API endpoints.
+. Application configurations. There are a few options including HOCON (application.conf), YAML (application.yaml), or configurations in code.
+
+By following the steps in Ktor, it's very easy to start a microservice easily. But there are more to develop a real service.
+
+==== Application Configurations
+The application below specifies the following:
+
+. The port numbers for service and metrics.
+. The environments.
+. The database configurations and Flyway database migration.
+
+*Application Configurations*
+[source,HOCON,numbered]
+----
+ktor {
+    serverPort: 8080                            # <1>
+    metricsServer: 9999
+
+    environment: "local"                        # <2>
+
+    app {
+        task {
+            timeout: 5000
+        }
+        serviceEndpoints: [ "/api" ]
+        metricsEndpoints: [ "/metrics", "health"]
+        http {
+            maxRetries: 3
+            requestTimeout: 3000
+            connectTimeout: 3000
+            socketTimeout: 3000
+        }
+    }
+}
+
+database {                                      # <3>
+    url: "jdbc:postgresql://localhost:5432/postgres-db"
+    username: "postgres"
+    password: "postgres"
+    driver: "org.postgresql.Driver"
+}
+
+flyway {                                        # <4>
+    info: true
+    strategy: MIGRATE
+}
+----
+<1> the port number for the API endpoints
+<2> define the environment.
+<3> database configurations.
+<4> Flyway configurations.
+
+*Load the Application Configurations*
+[source,kotlin,numbered]
+----
+class ApplicationConfigurations(
+    private val appConfig: Config = ConfigFactory.load()
+) : Config by appConfig
+
+private val applicationConfig = ApplicationConfigurations()
+
+object AppConfig {
+    fun applicationEnvironment(): String = applicationConfig.getString("ktor.environment")
+    fun appServerPort(): Int = applicationConfig.getInt("ktor.serverPort")
+    fun appMetricServerPort(): Int = applicationConfig.getInt("ktor.metricsServer")
+
+    fun CFG() = applicationConfig
+}
+----
