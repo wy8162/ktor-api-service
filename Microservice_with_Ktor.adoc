@@ -1,0 +1,43 @@
+:source-highlighter: pygments
+
+= Implementing Microservice with Ktor
+:sectnums:
+:toc:
+:toclevels: 4
+:toc-title: Table of Contents
+
+:description: Example AsciiDoc document
+:keywords: AsciiDoc
+:imagesdir: ./img
+
+== Build and Run the Application
+* Run the Jar file directly
+```
+$ java -jar build/libs/app.jar
+```
+* Build a Docker Image
+```
+$ docker build -f docker/Dockerfile -t ktor-api-service:latest .
+
+# Or alternately
+$ docker-compose run -f docker/docker-compose-build.yaml run app
+
+```
+
+=== Running Open Telemetry Agent
+* Download and copy the Open Telemetry agent and the Kotlin extension to /app: opentelemetry-agent.jar and opentelemetry-extensions-kotlin.jar.
+* Set the following environment variables
+```
+OTEL_JAVAAGENT_EXTENSIONS=/app/opentelemetry-extensions-kotlin.jar
+OTEL_TRACES_EXPORTER=otlp
+OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317 (or whatever URL)
+OTEL_SERVICE_NAME=ktor-api-service
+OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+OTEL_RESOURCE_ATTRIBUTES=deployment.environment=dev (or whatever environment)
+```
+* Run the application with Java agent
+```
+$ java -javaagent:/app/opentelemetry-javaagent.jar \
+-jar /app/app.jar
+```
+

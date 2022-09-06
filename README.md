@@ -1,1 +1,1 @@
-A sample / template for API service based on Ktor and KOIN.
+See Microservice with Ktor

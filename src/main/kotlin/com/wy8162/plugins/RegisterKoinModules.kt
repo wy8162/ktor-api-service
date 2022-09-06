@@ -1,8 +1,8 @@
 package com.wy8162.plugins
 
 import com.wy8162.config.httpClientInstance
-import com.wy8162.controller.UserController
 import com.wy8162.controller.HrController
+import com.wy8162.controller.UserController
 import com.wy8162.service.DatabaseService
 import com.wy8162.service.DatabaseServiceImpl
 import com.wy8162.service.HrService

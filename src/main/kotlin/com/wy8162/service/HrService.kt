@@ -4,7 +4,6 @@ import arrow.core.Either
 import arrow.core.rightIfNotNull
 import com.wy8162.error.ApiError
 import com.wy8162.error.ErrorCode
-import com.wy8162.model.UserEntity
 import com.wy8162.model.hr.Employee
 import com.wy8162.model.hr.EmployeeEntity
 import com.wy8162.model.hr.toEmployee

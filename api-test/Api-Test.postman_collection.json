@@ -1,0 +1,303 @@
+{
+	"info": {
+		"_postman_id": "dfdd492d-acc1-42d7-986d-d2cc1d535099",
+		"name": "Api-Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1010203"
+	},
+	"item": [
+		{
+			"name": "Register User",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"function getRandomInt(min, max) {",
+							"    min = Math.ceil(min);",
+							"    max = Math.floor(max);",
+							"    return Math.floor(Math.random() * (max - min)) + min;",
+							"}",
+							"",
+							"var rnum = String(getRandomInt(100, 900))",
+							"pm.environment.set(\"rnum\", rnum)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"wyemail{{num}}@gmail.com\",\n    \"password\": \"password\",\n    \"cell\": \"862123456\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"function getRandomInt(min, max) {",
+							"    min = Math.ceil(min);",
+							"    max = Math.floor(max);",
+							"    return Math.floor(Math.random() * (max - min)) + min;",
+							"}",
+							"",
+							"var rnum = String(getRandomInt(100, 900))",
+							"pm.environment.set(\"rnum\", rnum)"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var token = pm.response.json().data.token;",
+							"pm.environment.set(\"api-token\", token)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"wyemail{{num}}@gmail.com\",\n    \"password\": \"password\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/users/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"function getRandomInt(min, max) {",
+							"    min = Math.ceil(min);",
+							"    max = Math.floor(max);",
+							"    return Math.floor(Math.random() * (max - min)) + min;",
+							"}",
+							"",
+							"var rnum = String(getRandomInt(100, 900))",
+							"pm.environment.set(\"rnum\", rnum)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJodHRwOi8vMC4wLjAuMDo4MDgwL2hlbGxvIiwicm9sZSI6ImFkbWluIiwiaXNzIjoiaHR0cDovLzAuMC4wLjA6ODA4MC8iLCJleHAiOjE2NjIzNDE0MDgsInVzZXJuYW1lIjoid3llbWFpbDEwMDFAZ21haWwuY29tIn0.zMGh49eya3BhDJ3eLHK1H5zR-yODjVZT8IjrQkOrBpw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/users/e0adfbdc-c3aa-4d98-b165-20893ff6bbc0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"e0adfbdc-c3aa-4d98-b165-20893ff6bbc0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Employee",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"function getRandomInt(min, max) {",
+							"    min = Math.ceil(min);",
+							"    max = Math.floor(max);",
+							"    return Math.floor(Math.random() * (max - min)) + min;",
+							"}",
+							"",
+							"var rnum = String(getRandomInt(100, 900))",
+							"pm.environment.set(\"rnum\", rnum)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{api-token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/hr/100",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"hr",
+						"100"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Hello",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"function getRandomInt(min, max) {",
+							"    min = Math.ceil(min);",
+							"    max = Math.floor(max);",
+							"    return Math.floor(Math.random() * (max - min)) + min;",
+							"}",
+							"",
+							"var rnum = String(getRandomInt(100, 900))",
+							"pm.environment.set(\"rnum\", rnum)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{api-token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/users/hello",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"hello"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
