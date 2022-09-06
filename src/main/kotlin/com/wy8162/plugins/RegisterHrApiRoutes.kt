@@ -8,14 +8,13 @@ import io.ktor.server.application.Application
 import io.ktor.server.application.call
 import io.ktor.server.application.log
 import io.ktor.server.auth.authenticate
-import io.ktor.server.auth.jwt.JWTPrincipal
-import io.ktor.server.auth.principal
 import io.ktor.server.request.uri
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.get
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
+import io.ktor.util.AttributeKey
 import org.koin.ktor.ext.inject
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
@@ -33,8 +32,8 @@ private fun Route.apiV1Route() {
     route("/api/v1/hr") {
         authenticate("auth-jwt") {
             get("/{employeeId}") {
-                val principal = call.principal<JWTPrincipal>()
-                val role = principal!!.payload.getClaim("role").asString()
+                // Username and role are set in security module
+                val role = call.attributes[AttributeKey("role")]
 
                 if (role != ROLE_USER) {
                     throw UnauthorizedAccessException()

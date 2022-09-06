@@ -10,6 +10,7 @@ import io.ktor.server.auth.Authentication
 import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.jwt.jwt
 import io.ktor.server.response.respond
+import io.ktor.util.AttributeKey
 
 fun Application.registerSecurityModule() {
     install(Authentication) {
@@ -33,6 +34,11 @@ fun Application.registerSecurityModule() {
                 ) {
                     null
                 }
+                attributes.put(
+                    AttributeKey("username"),
+                    credential.payload.getClaim("username").asString()
+                )
+                attributes.put(AttributeKey("role"), credential.payload.getClaim("role").asString())
                 JWTPrincipal(credential.payload)
             }
             challenge { defaultScheme, realm ->

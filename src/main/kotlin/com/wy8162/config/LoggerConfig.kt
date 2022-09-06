@@ -1,4 +1,4 @@
-package com.wy8162.config
+package com.wy8162.config // ktlint-disable filename
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
