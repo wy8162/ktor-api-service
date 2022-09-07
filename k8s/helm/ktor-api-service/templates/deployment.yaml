@@ -45,12 +45,12 @@ spec:
               value: jdbc:postgresql://ktor-api-service-postgresql:5432/postgres-db
           livenessProbe:
             httpGet:
-              path: /api/v1/ping
-              port: http
+              path: /health
+              port: metrics
           readinessProbe:
             httpGet:
-              path: /api/v1/ping
-              port: http
+              path: /health
+              port: metrics
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
