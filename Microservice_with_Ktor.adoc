@@ -17,7 +17,7 @@ $ java -jar build/libs/app.jar
 ```
 * Build a Docker Image
 ```
-$ docker build -f docker/Dockerfile -t ktor-api-service:latest .
+$ docker build -f docker/Dockerfile -t wy8162/ktor-api-service:latest .
 
 # Or alternately
 $ docker-compose run -f docker/docker-compose-build.yaml run app

@@ -34,3 +34,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Helm dependnecies downloaded
+/k8s/helm/ktor-api-service/charts
