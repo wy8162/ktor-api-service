@@ -18,4 +18,10 @@ val RequestFilterPlugin = createApplicationPlugin(name = "RequestFilterPlugin") 
             }
         }
     }
+//    on(MonitoringEvent(ApplicationStarted)) { application ->
+//        if (application.pluginOrNull(Webjars) == null) {
+//            application.log.info("Registering Webjar.")
+//            application.install(Webjars)
+//        }
+//    }
 }

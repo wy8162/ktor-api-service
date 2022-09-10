@@ -9,6 +9,7 @@ import com.wy8162.plugins.registerHrApiV1Routes
 import com.wy8162.plugins.registerKoinModules
 import com.wy8162.plugins.registerMonitoringModule
 import com.wy8162.plugins.registerSecurityModule
+import com.wy8162.plugins.registerSwaggerRoutes
 import io.ktor.server.engine.applicationEngineEnvironment
 import io.ktor.server.engine.connector
 import io.ktor.server.engine.embeddedServer
@@ -25,6 +26,7 @@ fun main() {
             registerMonitoringModule()
             registerApiV1Routes()
             registerHrApiV1Routes()
+            registerSwaggerRoutes()
             registerErrorHandlingModule()
             initializeDatabase()
             registerSecurityModule()

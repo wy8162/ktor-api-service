@@ -112,8 +112,18 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-java-time:$exposed_version")
     implementation("org.flywaydb:flyway-core:$flyway_version")
 
+    // Webjar - no need for Webjar to just serve the Swagger JSON file.
+    // implementation("io.ktor:ktor-server-webjars:2.1.0")
+
+    // Swagger
+    implementation("org.webjars:swagger-ui:4.14.0")
+    // implementation("io.swagger.parser.v3:swagger-parser:2.1.2")
+
     // Fake data
-    implementation("com.github.javafaker:javafaker:1.0.2")
+    implementation("com.github.javafaker:javafaker:1.0.2") {
+        exclude(group = "org.yaml")
+    }
+    implementation("org.yaml:snakeyaml:1.30")
 
     // Test
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junit_version")
