@@ -1,15 +1,13 @@
 package com.wy8162.plugins // ktlint-disable filename
 
+import com.wy8162.config.AppConfig
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.OutgoingContent
-import io.ktor.http.withCharset
 import io.ktor.server.application.Application
-import io.ktor.server.application.ApplicationCall
 import io.ktor.server.application.call
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondRedirect
-import io.ktor.server.response.respondText
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.get
 import io.ktor.server.routing.route
@@ -22,53 +20,36 @@ import java.net.URL
 
 fun Application.registerSwaggerRoutes() {
     routing {
-        swaggerRoute()
+        apiSpecRoute()
     }
 }
 
 const val swaggerRoot = "swagger-ui"
-const val swaggerUiVersion = "4.14.0" // See the dependency of org.webjars:swagger-ui
+private val apiSpecName = AppConfig.CFG().getString("swagger.apiSpec")
 
-private fun Route.swaggerRoute() {
+private fun Route.apiSpecRoute() {
     route("/$swaggerRoot") {
         get("") {
-            call.respondRedirect("$swaggerRoot/index.html")
+            // Points to webjar-ui resources
+            call.respondRedirect("/webjars/swagger-ui/index.html")
         }
-        get("/{fileName}") {
-            when (val file = call.parameters["fileName"]!!) {
-                "swagger-initializer.js" -> {
-                    val js = this.javaClass.getResource("/static/swagger-initializer.js").readText()
-                    call.respondText(js, ContentType.Application.JavaScript, HttpStatusCode.OK)
+        get("/{file}") {
+            when (val file = call.parameters["file"]!!) {
+                "$apiSpecName.json" -> {
+                    val json = this.javaClass.getResource("/apispec/$apiSpecName.json")
+                    call.respond(ResourceContent(json))
                 }
 
-                "swagger.json" -> {
-                    val json = this.javaClass.getResource("/static/swagger.json").readText()
-                    call.respondText(json, ContentType.Application.Json, HttpStatusCode.OK)
-                }
-
-                else -> serveStaticResource(file, call)
+                else -> call.respond(HttpStatusCode.NotFound, "$file could not be found")
             }
         }
-    }
-}
-
-private suspend fun serveStaticResource(filename: String, call: ApplicationCall) {
-    val resource =
-        object {}.javaClass.getResource("/META-INF/resources/webjars/swagger-ui/$swaggerUiVersion/$filename")
-    if (resource == null) {
-        call.respond(HttpStatusCode.NotFound, "$filename could not be found")
-    } else {
-        call.respond(ResourceContent(resource))
     }
 }
 
 private class ResourceContent(val resource: URL) : OutgoingContent.ByteArrayContent() {
     private val bytes by lazy { resource.readBytes() }
 
-    override val contentType: ContentType? by lazy {
-        val extension = resource.file.substring(resource.file.lastIndexOf('.') + 1)
-        contentTypes[extension] ?: ContentType.Text.Html
-    }
+    override val contentType: ContentType? = ContentType.Application.Json
 
     override val contentLength: Long? by lazy {
         bytes.size.toLong()
@@ -78,11 +59,3 @@ private class ResourceContent(val resource: URL) : OutgoingContent.ByteArrayCont
 
     override fun toString() = "ResourceContent \"$resource\""
 }
-
-private val contentTypes = mapOf(
-    "html" to ContentType.Text.Html,
-    "css" to ContentType.Text.CSS,
-    "js" to ContentType.Application.JavaScript,
-    "json" to ContentType.Application.Json.withCharset(Charsets.UTF_8),
-    "png" to ContentType.Image.PNG
-)

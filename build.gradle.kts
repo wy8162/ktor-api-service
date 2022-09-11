@@ -113,10 +113,12 @@ dependencies {
     implementation("org.flywaydb:flyway-core:$flyway_version")
 
     // Webjar - no need for Webjar to just serve the Swagger JSON file.
-    // implementation("io.ktor:ktor-server-webjars:2.1.0")
+    implementation("io.ktor:ktor-server-webjars:2.1.0")
 
     // Swagger
     implementation("org.webjars:swagger-ui:4.14.0")
+    // To make webjar resources version agnostic
+    implementation("org.webjars:webjars-locator-core:0.52")
     // implementation("io.swagger.parser.v3:swagger-parser:2.1.2")
 
     // Fake data
