@@ -2,12 +2,10 @@ package com.wy8162.plugins // ktlint-disable filename
 
 import com.wy8162.controller.UserController
 import com.wy8162.model.ApiContext
+import com.wy8162.rbac.authorize
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
 import io.ktor.server.application.log
-import io.ktor.server.auth.authenticate
-import io.ktor.server.auth.jwt.JWTPrincipal
-import io.ktor.server.auth.principal
 import io.ktor.server.request.uri
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
@@ -62,12 +60,13 @@ private fun Route.apiV1Route() {
             call.application.log.info("${call.request.uri} ($time)")
         }
 
-        authenticate("auth-jwt") {
+        authorize("rbac", "system", "agent") {
             get("/hello") {
-                val principal = call.principal<JWTPrincipal>()
-                val username = principal!!.payload.getClaim("username").asString()
-                val expiresAt = principal.expiresAt?.time?.minus(System.currentTimeMillis())
-                call.respondText("Hello, $username! Token is expired at $expiresAt ms.")
+//                val principal = call.principal<JWTPrincipal>()
+//                val username = principal!!.payload.getClaim("username").asString()
+//                val expiresAt = principal.expiresAt?.time?.minus(System.currentTimeMillis())
+//                call.respondText("Hello, $username! Token is expired at $expiresAt ms.")
+                call.respondText("Hello")
             }
         }
     }
