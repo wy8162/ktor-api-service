@@ -2,6 +2,7 @@ package com.wy8162.plugins // ktlint-disable filename
 
 import com.wy8162.controller.UserController
 import com.wy8162.model.ApiContext
+import com.wy8162.rbac.RbacRole
 import com.wy8162.rbac.authorize
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
@@ -60,7 +61,7 @@ private fun Route.apiV1Route() {
             call.application.log.info("${call.request.uri} ($time)")
         }
 
-        authorize("rbac", "system", "agent") {
+        authorize("rbac", RbacRole("system", "identity"), RbacRole("agent", "identity")) {
             get("/hello") {
 //                val principal = call.principal<JWTPrincipal>()
 //                val username = principal!!.payload.getClaim("username").asString()
