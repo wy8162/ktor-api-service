@@ -20,7 +20,7 @@ fun Application.registerSecurityModule() {
         rbac("rbac") {
             validate { rbacCred ->
                 val role = request.headers["role"]
-                val requester = request.headers["requester-id"]
+                val requester = request.headers["requester"]
 
                 val matched = rbacCred.roles?.any {
                     it.role == role && it.requesterId == requester

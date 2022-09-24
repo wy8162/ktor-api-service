@@ -128,9 +128,10 @@ dependencies {
     implementation("org.yaml:snakeyaml:1.30")
 
     // Test
-    testImplementation("org.junit.jupiter:junit-jupiter-api:$junit_version")
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:$junit_version")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:$junit_version")
+    testImplementation("io.ktor:ktor-server-test-host:$ktor_version")
+    testImplementation("io.insert-koin:koin-test:$koin_version")
+    testImplementation("io.insert-koin:koin-test-junit5:$koin_version")
+    testImplementation("org.junit.jupiter:junit-jupiter:$junit_version")
     testImplementation("org.assertj:assertj-core:$assertj_version")
     testImplementation("io.mockk:mockk:$mockk_version")
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")

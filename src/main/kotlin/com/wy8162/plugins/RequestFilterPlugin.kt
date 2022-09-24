@@ -11,21 +11,14 @@ import io.ktor.server.application.pluginOrNull
 import io.ktor.server.plugins.origin
 import io.ktor.server.webjars.Webjars
 
-private val apiEndpoints: Map<Int, List<Regex>> = mapOf(
-    AppConfig.appServerPort() to (
-        AppConfig.CFG().getStringList("ktor.app.serviceEndpoints")
-            .map { it.toRegex() }.toList()
-        ),
-    AppConfig.appMetricServerPort() to (
-        AppConfig.CFG().getStringList("ktor.app.metricsEndpoints")
-            .map { it.toRegex() }
-        )
-)
+private val metricsEndpoints: List<Regex> =
+    AppConfig.CFG().getStringList("ktor.app.metricsEndpoints")
+        .map { it.toRegex() }
 
 val RequestFilterPlugin = createApplicationPlugin(name = "RequestFilterPlugin") {
     onCall { call ->
         call.request.origin.apply {
-            if (apiEndpoints.getOrDefault(port, listOf()).none { it.matches(uri) }) {
+            if (port != AppConfig.appMetricServerPort() && metricsEndpoints.any { it.matches(uri) }) {
                 throw EndpointNotFoundException()
             }
         }

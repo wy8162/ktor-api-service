@@ -5,8 +5,12 @@ import com.wy8162.controller.HrController
 import com.wy8162.controller.UserController
 import com.wy8162.service.DatabaseService
 import com.wy8162.service.DatabaseServiceImpl
+import com.wy8162.service.HelloService
+import com.wy8162.service.HelloServiceImpl
 import com.wy8162.service.HrService
 import com.wy8162.service.HrServiceImpl
+import com.wy8162.service.SmsService
+import com.wy8162.service.SmsServiceImpl
 import com.wy8162.service.UserService
 import com.wy8162.service.UserServiceImpl
 import io.ktor.server.application.Application
@@ -31,7 +35,9 @@ val koinModule = module {
     singleOf(::UserServiceImpl) bind UserService::class
     singleOf(::HrController)
     singleOf(::HrServiceImpl) bind HrService::class
+    singleOf(::SmsServiceImpl) bind SmsService::class
     singleOf(::DatabaseServiceImpl) bind DatabaseService::class
+    singleOf(::HelloServiceImpl) bind HelloService::class
     single { PrometheusMeterRegistry(PrometheusConfig.DEFAULT) }
     single { httpClientInstance() }
 }

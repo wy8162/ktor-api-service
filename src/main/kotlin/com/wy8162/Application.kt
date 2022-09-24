@@ -32,6 +32,9 @@ fun main() {
             registerSecurityModule()
         }
 
+        // Don't do this for production.
+        developmentMode = true
+
         connector {
             port = AppConfig.appServerPort()
         }
