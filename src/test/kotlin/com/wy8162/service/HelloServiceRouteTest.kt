@@ -1,13 +1,11 @@
 package com.wy8162.service
 
-import com.wy8162.model.hr.Employee
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.http.HttpStatusCode
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
-import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -18,14 +16,6 @@ import org.koin.test.mock.declareMock
 
 @ExtendWith(MockKExtension::class)
 internal class HelloServiceRouteTest : BaseIntegrationTest() {
-    @MockK
-    lateinit var helloMessage: HelloMessage
-
-    @MockK
-    lateinit var employee: Employee
-
-    private val hrService: HrService by inject<HrService>()
-    private val smsService: SmsService by inject<SmsService>()
     private val helloService: HelloService by inject<HelloService>()
 
     @Before
