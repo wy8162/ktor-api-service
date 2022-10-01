@@ -8,3 +8,4 @@ Swagger UI:
 - http://localhost:8080/webjars/swagger-ui/index.html
 
 The first URL is redirected to the Webjar one.
+

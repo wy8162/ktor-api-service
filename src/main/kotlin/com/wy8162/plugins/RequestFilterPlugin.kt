@@ -9,7 +9,10 @@ import io.ktor.server.application.install
 import io.ktor.server.application.log
 import io.ktor.server.application.pluginOrNull
 import io.ktor.server.plugins.origin
+import io.ktor.server.request.httpMethod
+import io.ktor.server.request.uri
 import io.ktor.server.webjars.Webjars
+import io.opentelemetry.api.trace.Span
 
 private val metricsEndpoints: List<Regex> =
     AppConfig.CFG().getStringList("ktor.app.metricsEndpoints")
@@ -21,6 +24,8 @@ val RequestFilterPlugin = createApplicationPlugin(name = "RequestFilterPlugin") 
             if (port != AppConfig.appMetricServerPort() && metricsEndpoints.any { it.matches(uri) }) {
                 throw EndpointNotFoundException()
             }
+            // Assign a meaningful name to the endpoint metrics
+            Span.current().updateName("${call.request.httpMethod.value} ${call.request.uri}")
         }
     }
     onCallRespond { call ->

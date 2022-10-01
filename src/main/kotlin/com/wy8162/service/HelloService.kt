@@ -22,7 +22,6 @@ class SmsServiceImpl : SmsService {
         println("SMS: $message")
         return HelloMessage(message = "$message was sent.", status = "All Good")
     }
-
 }
 
 class HelloServiceImpl(

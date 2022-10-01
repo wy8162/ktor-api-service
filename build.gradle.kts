@@ -121,6 +121,12 @@ dependencies {
     implementation("org.webjars:webjars-locator-core:0.52")
     // implementation("io.swagger.parser.v3:swagger-parser:2.1.2")
 
+    // Open Telemetry
+    implementation(platform("io.opentelemetry:opentelemetry-bom:1.18.0"))
+    implementation("io.opentelemetry:opentelemetry-api")
+    implementation("io.opentelemetry:opentelemetry-sdk")
+    implementation("io.opentelemetry:opentelemetry-extension-kotlin")
+
     // Fake data
     implementation("com.github.javafaker:javafaker:1.0.2") {
         exclude(group = "org.yaml")
