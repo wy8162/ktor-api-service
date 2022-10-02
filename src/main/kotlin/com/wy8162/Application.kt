@@ -14,10 +14,14 @@ import io.ktor.server.engine.applicationEngineEnvironment
 import io.ktor.server.engine.connector
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import java.lang.management.ManagementFactory
+import java.lang.management.RuntimeMXBean
 
 fun main() {
     val env = applicationEngineEnvironment {
+        val javaAgent = getAgentArgument()
         log.info("Application is starting in environment: ${AppConfig.applicationEnvironment()}")
+        log.info("Java agent : $javaAgent")
 
         @Suppress("unused") // application.conf references the main function. This annotation prevents the IDE from marking it as unused.
         module() {
@@ -44,4 +48,14 @@ fun main() {
     }
 
     embeddedServer(Netty, environment = env).start(wait = true)
+}
+
+private fun getAgentArgument(): String? {
+    val runtimeMxBean: RuntimeMXBean = ManagementFactory.getRuntimeMXBean()
+    for (arg in runtimeMxBean.getInputArguments()) {
+        if (arg.startsWith("-javaagent")) {
+            return arg
+        }
+    }
+    return "Agent jar not found"
 }
