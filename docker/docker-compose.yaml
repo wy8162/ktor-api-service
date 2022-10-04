@@ -1,0 +1,53 @@
+---
+version: "3.1"
+
+services:
+  app:
+    image: wy8162/ktor-api-service:latest
+    container_name: app
+    ports:
+      - "8080:8080"
+    restart: always
+    depends_on:
+      - db
+      - jaeger
+    links:
+      - db
+      - jaeger
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/postgres-db
+      OTEL_EXPORTER_JAEGER_ENDPOINT: http://jaeger:14250
+      TEL_JAVAAGENT_EXTENSIONS: /opt/opentelemetry-extensions-kotlin.jar
+      OTEL_TRACES_EXPORTER: jaeger
+      OTEL_METRICS_EXPORTER: none
+      OTEL_SERVICE_NAME: ktor-api-service
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      OTEL_RESOURCE_ATTRIBUTES: deployment.environment=dev
+      OTEL_INSTRUMENTATION_METHODS_INCLUDE: com.wy8162.service.HelloService[sayHi,textMessage];com.wy8162.service.HrService[getEmployee];com.wy8162.service.UserService[registerUser,getUserById,getUserByUsernameAndPassword,getAllUsers];com.wy8162.service.DatabaseService[databaseQuery];com.wy8162.controller.UserController[processUserRegistration,processLogin,getUser];com.wy8162.controller.HrController[getEmployee]
+
+  db:
+    image: postgres
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres-db
+
+  jaeger:
+    image: jaegertracing/all-in-one
+    container_name: jaeger
+    ports:
+      - "5775:5775/udp"
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+      - "5778:5778"
+      - "16686:16686"
+      - "14268:14268"
+      - "14250:14250"
+      - "9411:9411"
+    restart: always
+    environment:
+      COLLECTOR_ZIPKIN_HTTP_PORT: 9411
