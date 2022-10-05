@@ -24,7 +24,7 @@ $ docker-compose run -f docker/docker-compose-build.yaml run app
 
 ```
 
-=== Running Open Telemetry Agent
+=== Running Open Telemetry Agent with or without Debug
 * Download and copy the Open Telemetry agent and the Kotlin extension to /app: opentelemetry-agent.jar and opentelemetry-extensions-kotlin.jar.
 * Set the following environment variables
 ```
@@ -38,6 +38,12 @@ OTEL_RESOURCE_ATTRIBUTES=deployment.environment=dev (or whatever environment)
 * Run the application with Java agent
 ```
 $ java -javaagent:/app/opentelemetry-javaagent.jar \
+-jar /app/app.jar
+
+Or add debug option
+
+$ java -javaagent:/app/opentelemetry-javaagent.jar \
+-Dotel.javaagent.debug=true
 -jar /app/app.jar
 ```
 
