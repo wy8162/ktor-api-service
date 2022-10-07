@@ -4,7 +4,12 @@ import com.wy8162.controller.UserController
 import com.wy8162.model.ApiContext
 import com.wy8162.rbac.RbacRole
 import com.wy8162.rbac.authorize
+import com.wy8162.service.HelloMessage
 import com.wy8162.service.HelloService
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.header
+import io.ktor.client.request.request
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
@@ -30,6 +35,7 @@ fun Application.registerApiV1Routes() {
 private fun Route.apiV1Route() {
     val userController: UserController by inject()
     val helloService: HelloService by inject()
+    val httpClient: HttpClient by inject()
 
     route("/api/v1/users") {
         post("") {
@@ -67,6 +73,17 @@ private fun Route.apiV1Route() {
             get("/hello/{name}") {
                 val message = helloService.sayHi(call.parameters["name"]!!)
                 call.respond(status = HttpStatusCode.OK, message)
+            }
+            get("/remotehello/{name}") {
+                val message = helloService.sayHi(call.parameters["name"]!!)
+                val response = httpClient.request("http://localhost:8081/api/v1/users/hello/101") {
+                    header("role", "system")
+                    header("requester", "admin")
+                }
+
+                val msg = response.body<HelloMessage>()
+
+                call.respond(status = HttpStatusCode.OK, mapOf("local" to message, "remote" to msg))
             }
         }
     }

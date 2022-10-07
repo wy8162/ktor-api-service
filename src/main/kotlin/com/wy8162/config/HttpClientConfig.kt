@@ -6,9 +6,11 @@ import io.ktor.client.engine.apache.Apache
 import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.HttpSend
 import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.plugin
+import io.ktor.serialization.jackson.jackson
 import org.slf4j.LoggerFactory
 
 private val logger = LoggerFactory.getLogger("HttpClient")
@@ -34,6 +36,12 @@ private fun httpClientCommonSettings(): HttpClientConfig<*>.() -> Unit = {
     install(HttpRequestRetry) {
         retryOnServerErrors(maxRetries = AppConfig.CFG().getInt("ktor.app.http.maxRetries"))
         exponentialDelay()
+    }
+
+    install(ContentNegotiation) {
+        jackson {
+            jacksonFeatureConfigurations()
+        }
     }
 
     install(HttpTimeout) {

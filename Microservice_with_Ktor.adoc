@@ -75,6 +75,21 @@ java -javaagent:opentelemetry/opentelemetry-javaagent.jar \
 -jar build/libs/app.jar
 ```
 
+==== OpenTelemetry Context Propagation
+. Run docker-compose to run the application and the Jaeger in Docker containers. The application listens to port 8081.
+. Run application locally which listens to port 8080.
+. Call API "/api/v1/users/remotehello/101". This API will call "http://localhost:8081/api/v1/users/hello/101".
+. The trace will show end to end view.
+
+```
+$ cd docker
+$ docker-compose up
+$ cd ..
+$ java -javaagent:opentelemetry/opentelemetry-javaagent.jar \
+-Dotel.javaagent.configuration-file=src/main/resources/opentelemetry.properties \
+-jar build/libs/app.jar
+```
+
 == Building Microservice with Ktor
 === Why Ktor
 *https://ktor.io[Lightweight and Flexible]*
