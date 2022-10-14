@@ -21,7 +21,7 @@ internal class HelloServiceImplTest {
     lateinit var employee: Employee
 
     @RelaxedMockK
-    lateinit var hrService: HrService
+    lateinit var hrService: AbstractHrService
 
     @RelaxedMockK
     lateinit var smsService: SmsService

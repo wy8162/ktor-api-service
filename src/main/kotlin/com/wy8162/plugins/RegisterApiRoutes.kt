@@ -6,6 +6,7 @@ import com.wy8162.rbac.RbacRole
 import com.wy8162.rbac.authorize
 import com.wy8162.service.HelloMessage
 import com.wy8162.service.HelloService
+import com.wy8162.service.HrService
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.header
@@ -21,6 +22,7 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
+import org.koin.core.qualifier.named
 import org.koin.ktor.ext.inject
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
@@ -36,6 +38,9 @@ private fun Route.apiV1Route() {
     val userController: UserController by inject()
     val helloService: HelloService by inject()
     val httpClient: HttpClient by inject()
+    val hrService1: HrService by inject(named("hr1"))
+    val hrService2: HrService by inject(named("hr2"))
+    val hrService3: HrService by inject(named("hr3"))
 
     route("/api/v1/users") {
         post("") {
@@ -67,6 +72,18 @@ private fun Route.apiV1Route() {
 
             call.respond(ctx.httpStatus, ctx.apiResponse)
             call.application.log.info("${call.request.uri} ($time)")
+        }
+
+        get("/testkoin") {
+            val h1 = hrService1.getEmployee(101)
+            val h2 = hrService2.getEmployee(102)
+            val h3 = hrService3.getEmployee(103)
+
+            call.application.log.info("$h1")
+            call.application.log.info("$h2")
+            call.application.log.info("$h3")
+
+            call.respond(h1)
         }
 
         authorize("rbac", RbacRole("system", "admin"), RbacRole("agent", "identity")) {
