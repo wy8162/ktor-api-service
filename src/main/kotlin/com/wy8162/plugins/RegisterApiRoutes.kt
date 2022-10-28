@@ -22,7 +22,6 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
-import org.koin.core.qualifier.named
 import org.koin.ktor.ext.inject
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
@@ -38,9 +37,7 @@ private fun Route.apiV1Route() {
     val userController: UserController by inject()
     val helloService: HelloService by inject()
     val httpClient: HttpClient by inject()
-    val hrService1: HrService by inject(named("hr1"))
-    val hrService2: HrService by inject(named("hr2"))
-    val hrService3: HrService by inject(named("hr3"))
+    val hrService: HrService by inject()
 
     route("/api/v1/users") {
         post("") {
@@ -75,9 +72,9 @@ private fun Route.apiV1Route() {
         }
 
         get("/testkoin") {
-            val h1 = hrService1.getEmployee(101)
-            val h2 = hrService2.getEmployee(102)
-            val h3 = hrService3.getEmployee(103)
+            val h1 = hrService.getEmployee(101)
+            val h2 = hrService.getEmployee(102)
+            val h3 = hrService.getEmployee(103)
 
             call.application.log.info("$h1")
             call.application.log.info("$h2")

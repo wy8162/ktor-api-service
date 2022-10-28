@@ -48,6 +48,10 @@ fun Application.registerApiModule() {
         allowMethod(HttpMethod.Delete)
         allowMethod(HttpMethod.Patch)
         allowHeader(HttpHeaders.Authorization)
+        allowHeader(HttpHeaders.AccessControlAllowOrigin)
+        allowHeader(HttpHeaders.AccessControlAllowHeaders)
+        allowHeader(HttpHeaders.AccessControlAllowOrigin)
+        allowHeader("x-debug-options")
         anyHost()
     }
 }

@@ -27,8 +27,8 @@ internal class HelloServiceImplKoinTest : KoinTest {
     @MockK
     lateinit var employee: Employee
 
-    private val hrService: AbstractHrService by inject<AbstractHrService>()
-    private val smsService: SmsService by inject<SmsService>()
+    private val hrService: HrService by inject()
+    private val smsService: SmsService by inject()
 
     private val helloService by lazy {
         HelloServiceImpl(hrService, smsService)
