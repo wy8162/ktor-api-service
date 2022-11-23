@@ -16,6 +16,7 @@ import com.wy8162.service.UserService
 import com.wy8162.utils.validate
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.request.receive
+import org.slf4j.MDC
 import java.util.Date
 
 class UserController(
@@ -69,5 +70,6 @@ class UserController(
                 context.apiResponse.data = user.value
             }
         }
+        MDC.put("user-id", id)
     }
 }
