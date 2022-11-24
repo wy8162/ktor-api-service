@@ -92,7 +92,7 @@ class UserController(
 
     suspend fun getUser(context: ApiContext) {
         val id = context.call.parameters["userId"] ?: throw InvalidUserIdException()
-        when (val user = userService.getUserById(id)) {
+        when (val user = userService.getUserByIdSql(id)) {
             is Either.Left -> throw InvalidUserIdException()
             is Either.Right -> {
                 context.httpStatus = HttpStatusCode.OK

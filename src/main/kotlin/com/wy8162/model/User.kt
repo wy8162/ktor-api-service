@@ -2,6 +2,7 @@ package com.wy8162.model
 
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.ResultRow
+import java.sql.ResultSet
 import java.util.UUID
 
 data class User(

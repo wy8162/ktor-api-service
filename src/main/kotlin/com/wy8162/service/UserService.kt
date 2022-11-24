@@ -18,6 +18,7 @@ import java.util.UUID
 interface UserService {
     suspend fun registerUser(user: UserRequest): Either<ApiError, User>
     suspend fun getUserById(id: String): Either<ApiError, User>
+    suspend fun getUserByIdSql(id: String): Either<ApiError, User>
     suspend fun getUserByUsernameAndPassword(login: LoginRequest): Either<ApiError, User>
     suspend fun getAllUsers(): Either<ApiError, List<User>>
 }
@@ -50,6 +51,23 @@ class UserServiceImpl(
             it.toUser()
         }
     }
+
+    override suspend fun getUserByIdSql(id: String): Either<ApiError, User> =
+        dbService.execute("select * from users where id = '$id'") {
+            User(
+                id = UUID.fromString(it.getString("id")),
+                email = it.getString("email"),
+                userName = it.getString("username"),
+                password = it.getString("password"),
+                phone = it.getString("phone"),
+                cell = it.getString("cell")
+            )
+        }.firstOrNull().rightIfNotNull {
+            ApiError(
+                errorMessage = "Not found",
+                errorCode = ErrorCode.ERR_DB_FAILURE
+            )
+        }
 
     override suspend fun getUserByUsernameAndPassword(login: LoginRequest) = dbService.databaseQuery {
         UserEntity.select {
