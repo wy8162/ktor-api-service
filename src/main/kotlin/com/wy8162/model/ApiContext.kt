@@ -10,45 +10,39 @@ enum class ApiStatus {
 }
 
 @Suppress("UNCHECKED_CAST")
-class ApiContext(private val properties: MutableMap<String, Any?> = mutableMapOf()) {
-    constructor(block: ApiContext.() -> Unit) : this() {
-        this.apply(block)
-    }
+class ApiContext(block: ApiContext.() -> Unit) {
+    private val _attributes: MutableMap<String, Any?> = mutableMapOf()
+
+    var call: ApplicationCall by _attributes
+    var status: ApiStatus by _attributes
+    var httpStatus: HttpStatusCode by _attributes
+    var apiResponse: ApiResponse by _attributes
+
+    fun response(): Map<String, Any?> = apiResponse.response
 
     operator fun invoke(block: ApiContext.() -> Unit): ApiContext {
         this.apply(block)
         return this
     }
 
-    var call: ApplicationCall by properties
-    var status: ApiStatus by properties
-    var httpStatus: HttpStatusCode by properties
-    var apiResponse: ApiResponse by properties
+    fun assign(vararg values: Pair<String, Any?>): ApiContext {
+        for ((k, v) in values) {
+            _attributes[k] = v
+        }
+        return this
+    }
 
-    operator fun <T> get(name: String): T = properties[name] as T
+    operator fun <T> get(name: String): T = _attributes[name] as T
     operator fun set(name: String, any: Any?) {
-        properties[name] = any
+        _attributes[name] = any
     }
 
     operator fun plusAssign(pair: Pair<String, Any?>) {
-        properties[pair.first] = pair.second
+        _attributes[pair.first] = pair.second
     }
 
     init {
         initializeApiContext()
-    }
-
-    companion object {
-        fun configure(block: ApiContext.() -> Unit): ApiContext {
-            val ctx = ApiContext()
-
-            ctx.apply {
-                initializeApiContext()
-            }
-
-            ctx.apply(block)
-            return ctx
-        }
     }
 
     private fun initializeApiContext() {
@@ -56,5 +50,9 @@ class ApiContext(private val properties: MutableMap<String, Any?> = mutableMapOf
         status = ApiStatus.SUCCESSFUL
         httpStatus = HttpStatusCode.OK
         apiResponse = r
+    }
+
+    init {
+        this.apply(block)
     }
 }

@@ -2,6 +2,7 @@ package com.wy8162.plugins // ktlint-disable filename
 
 import com.wy8162.controller.UserController
 import com.wy8162.model.ApiContext
+import com.wy8162.model.response.HelloResponse
 import com.wy8162.rbac.RbacRole
 import com.wy8162.rbac.authorize
 import com.wy8162.service.HelloMessage
@@ -51,11 +52,11 @@ private fun Route.apiV1Route() {
                 userController.processUserRegistration(ctx)
             }
 
-            call.respond(ctx.httpStatus, ctx.apiResponse.response)
+            call.respond(ctx.httpStatus, ctx.response())
             call.application.log.info("${call.request.uri} ($time)")
         }
         get("/{userId}") {
-            val ctx = ApiContext()
+            val ctx = ApiContext{}
             ctx.call = call
 
             MDC.put("status", "beginning")
@@ -64,18 +65,18 @@ private fun Route.apiV1Route() {
             }
 
             ctx.apiResponse["status"] = "OK"
-            call.respond(ctx.httpStatus, ctx.apiResponse.response)
+            call.respond(ctx.httpStatus, ctx.response())
             call.application.log.info("${call.request.uri} ($time)")
         }
         post("/login") {
-            val ctx = ApiContext()
+            val ctx = ApiContext {}
             ctx += "call" to call
 
             val time = measureTime {
                 userController.processLogin(ctx)
             }
 
-            call.respond(ctx.httpStatus, ctx.apiResponse.response)
+            call.respond(ctx.httpStatus, ctx.response())
             call.application.log.info("${call.request.uri} ($time)")
         }
 
@@ -94,7 +95,14 @@ private fun Route.apiV1Route() {
         authorize("rbac", RbacRole("system", "admin"), RbacRole("agent", "identity")) {
             get("/hello/{name}") {
                 val message = helloService.sayHi(call.parameters["name"]!!)
-                call.respond(status = HttpStatusCode.OK, message)
+
+                val r = HelloResponse.newInstance()
+                r.assign(
+                    "message" to message,
+                    "hello" to "Great"
+                )
+
+                call.respond(status = HttpStatusCode.OK, r.response)
             }
             get("/remotehello/{name}") {
                 val message = helloService.sayHi(call.parameters["name"]!!)
@@ -105,7 +113,15 @@ private fun Route.apiV1Route() {
 
                 val msg = response.body<HelloMessage>()
 
-                call.respond(status = HttpStatusCode.OK, mapOf("local" to message, "remote" to msg))
+                val r = HelloResponse.newInstance()
+                r.assign(
+                    "local" to message,
+                    "remote" to msg,
+                    "hello" to "Great",
+                    "someOtherThing" to "should not be included in response"
+                )
+
+                call.respond(status = HttpStatusCode.OK, r.response)
             }
         }
     }

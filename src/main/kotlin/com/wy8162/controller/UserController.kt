@@ -78,10 +78,16 @@ class UserController(
         }
 
         context.apiResponse {
-            set("controller", "UserController")
-            set("app", "User Login")
+            this["controller"] = "UserController"
+            this["app"] = "User Login"
             this["data"] = LoginResponse(token = token, refreshToken = token)
         }
+
+        // Another way to add values to API response
+        context.apiResponse.assign(
+            "error" to "None",
+            "status" to HttpStatusCode.OK
+        )
     }
 
     suspend fun getUser(context: ApiContext) {

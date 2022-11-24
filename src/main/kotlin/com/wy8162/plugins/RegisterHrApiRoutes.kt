@@ -39,14 +39,14 @@ private fun Route.apiV1Route() {
                     throw UnauthorizedAccessException()
                 }
 
-                val ctx = ApiContext()
+                val ctx = ApiContext {}
                 ctx += "call" to call
 
                 val time = measureTime {
                     hrController.getEmployee(ctx)
                 }
 
-                call.respond(ctx.httpStatus, ctx.apiResponse.response)
+                call.respond(ctx.httpStatus, ctx.response())
                 call.application.log.info("${call.request.uri} ($time)")
             }
         }
