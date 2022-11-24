@@ -23,6 +23,7 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import org.koin.ktor.ext.inject
+import org.slf4j.MDC
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
 
@@ -41,33 +42,39 @@ private fun Route.apiV1Route() {
 
     route("/api/v1/users") {
         post("") {
-            val ctx = ApiContext(call = call)
+            val ctx = ApiContext()
+            ctx.call = call
+            ctx += "abc" to "abc"
 
             val time = measureTime {
                 userController.processUserRegistration(ctx)
             }
 
-            call.respond(ctx.httpStatus, ctx.apiResponse)
+            call.respond(ctx.httpStatus, ctx.apiResponse.response)
             call.application.log.info("${call.request.uri} ($time)")
         }
         get("/{userId}") {
-            val ctx = ApiContext(call = call)
+            val ctx = ApiContext()
+            ctx.call = call
 
+            MDC.put("status", "beginning")
             val time = measureTime {
                 userController.getUser(ctx)
             }
 
-            call.respond(ctx.httpStatus, ctx.apiResponse)
+            ctx.apiResponse["status"] = "OK"
+            call.respond(ctx.httpStatus, ctx.apiResponse.response)
             call.application.log.info("${call.request.uri} ($time)")
         }
         post("/login") {
-            val ctx = ApiContext(call = call)
+            val ctx = ApiContext()
+            ctx += "call" to call
 
             val time = measureTime {
                 userController.processLogin(ctx)
             }
 
-            call.respond(ctx.httpStatus, ctx.apiResponse)
+            call.respond(ctx.httpStatus, ctx.apiResponse.response)
             call.application.log.info("${call.request.uri} ($time)")
         }
 

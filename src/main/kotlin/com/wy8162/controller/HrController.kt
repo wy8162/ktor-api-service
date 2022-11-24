@@ -16,7 +16,7 @@ class HrController(
             is Either.Left -> throw InvalidEmployeeIdException()
             is Either.Right -> {
                 ctx.httpStatus = HttpStatusCode.OK
-                ctx.apiResponse.data = emp.value
+                ctx.apiResponse["data"] = emp.value
             }
         }
     }

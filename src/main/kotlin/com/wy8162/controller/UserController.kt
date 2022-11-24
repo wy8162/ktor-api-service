@@ -30,12 +30,12 @@ class UserController(
             is Either.Left -> {
                 context.status = ApiStatus.FAILED
                 context.httpStatus = HttpStatusCode.BadRequest
-                context.addError(result.value)
+                context.apiResponse.addError(result.value)
             }
 
             is Either.Right -> {
                 context.httpStatus = HttpStatusCode.OK
-                context.apiResponse.data = result.value
+                context.apiResponse["data"] = result.value
             }
         }
     }
@@ -58,7 +58,7 @@ class UserController(
             .withExpiresAt(Date(System.currentTimeMillis() + 60000))
             .sign(Algorithm.HMAC256(AppConfig.CFG().getString("jwt.secret")))
 
-        context.apiResponse.data = LoginResponse(token = token, refreshToken = token)
+        context.apiResponse["data"] = LoginResponse(token = token, refreshToken = token)
     }
 
     suspend fun getUser(context: ApiContext) {
@@ -67,7 +67,7 @@ class UserController(
             is Either.Left -> throw InvalidUserIdException()
             is Either.Right -> {
                 context.httpStatus = HttpStatusCode.OK
-                context.apiResponse.data = user.value
+                context.apiResponse["data"] = user.value
             }
         }
         MDC.put("user-id", id)

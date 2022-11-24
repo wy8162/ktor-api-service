@@ -20,26 +20,22 @@ fun Application.registerErrorHandlingModule() {
                 is EndpointNotFoundException -> call.respond(HttpStatusCode.NotFound)
                 is ApiRequestValidationException -> call.respond(
                     HttpStatusCode.BadRequest,
-                    ApiResponse().apply {
-                        errors.add(
-                            ApiError(
-                                errorCode = ErrorCode.ERR_VALIDATION_ERROR,
-                                errorMessage = cause.message
-                            ).apply { addErrors(cause.violations) }
-                        )
-                    }
+                    ApiResponse().addError(
+                        ApiError(
+                            errorCode = ErrorCode.ERR_VALIDATION_ERROR,
+                            errorMessage = cause.message
+                        ).apply { addErrors(cause.violations) }
+                    )
                 )
 
                 else -> call.respond(
                     HttpStatusCode.BadRequest,
-                    ApiResponse().apply {
-                        errors.add(
-                            ApiError(
-                                errorCode = ErrorCode.ERR_INVALID_REQUEST,
-                                errorMessage = cause.message
-                            )
+                    ApiResponse().addError(
+                        ApiError(
+                            errorCode = ErrorCode.ERR_INVALID_REQUEST,
+                            errorMessage = cause.message
                         )
-                    }
+                    )
                 )
             }
         }
