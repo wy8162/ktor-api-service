@@ -5,6 +5,7 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.wy8162.config.AppConfig
 import com.wy8162.config.ROLE_USER
+import com.wy8162.config.getLogger
 import com.wy8162.error.InvalidUserIdException
 import com.wy8162.error.UnauthorizedAccessException
 import com.wy8162.model.ApiContext
@@ -23,6 +24,19 @@ class UserController(
     private val userService: UserService
 ) {
     suspend fun processUserRegistration(context: ApiContext) {
+        val extraData: String = context["extraData"]
+
+        context {
+            set("someOtherData1", "someOtherData2")
+            set("someOtherData2", "someOtherData1")
+        }
+
+        context.apiResponse {
+            set("controller", "UserController")
+            set("app", "User Management")
+        }
+
+        getLogger().info("Extra data from context: $extraData")
         val userRequest = context.call.receive<UserRequest>()
         userRequest.validate()
 
@@ -58,7 +72,16 @@ class UserController(
             .withExpiresAt(Date(System.currentTimeMillis() + 60000))
             .sign(Algorithm.HMAC256(AppConfig.CFG().getString("jwt.secret")))
 
-        context.apiResponse["data"] = LoginResponse(token = token, refreshToken = token)
+        context {
+            set("someOtherData1", "someOtherData2")
+            set("someOtherData2", "someOtherData1")
+        }
+
+        context.apiResponse {
+            set("controller", "UserController")
+            set("app", "User Login")
+            this["data"] = LoginResponse(token = token, refreshToken = token)
+        }
     }
 
     suspend fun getUser(context: ApiContext) {

@@ -4,6 +4,11 @@ import com.wy8162.error.ApiError
 
 @Suppress("UNCHECKED_CAST")
 data class ApiResponse(val response: MutableMap<String, Any?> = mutableMapOf()) {
+    operator fun invoke(block: ApiResponse.() -> Unit): ApiResponse {
+        this.apply(block)
+        return this
+    }
+
     operator fun <T> get(name: String): T = response[name] as T
     operator fun set(name: String, any: Any?) {
         response[name] = any

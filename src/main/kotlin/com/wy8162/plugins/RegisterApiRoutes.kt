@@ -42,9 +42,10 @@ private fun Route.apiV1Route() {
 
     route("/api/v1/users") {
         post("") {
-            val ctx = ApiContext()
-            ctx.call = call
-            ctx += "abc" to "abc"
+            val ctx = ApiContext {
+                call = this@post.call
+                set("extraData", "SomeOtherData")
+            }
 
             val time = measureTime {
                 userController.processUserRegistration(ctx)

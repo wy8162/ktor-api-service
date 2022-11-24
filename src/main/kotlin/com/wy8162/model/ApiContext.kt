@@ -10,7 +10,16 @@ enum class ApiStatus {
 }
 
 @Suppress("UNCHECKED_CAST")
-data class ApiContext(val properties: MutableMap<String, Any?> = mutableMapOf()) {
+class ApiContext(private val properties: MutableMap<String, Any?> = mutableMapOf()) {
+    constructor(block: ApiContext.() -> Unit) : this() {
+        this.apply(block)
+    }
+
+    operator fun invoke(block: ApiContext.() -> Unit): ApiContext {
+        this.apply(block)
+        return this
+    }
+
     var call: ApplicationCall by properties
     var status: ApiStatus by properties
     var httpStatus: HttpStatusCode by properties
