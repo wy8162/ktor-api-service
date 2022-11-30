@@ -134,6 +134,8 @@ dependencies {
     implementation("org.yaml:snakeyaml:1.30")
 
     // Test
+    implementation("org.testcontainers:postgresql:1.17.6")
+
     testImplementation("io.ktor:ktor-server-test-host:$ktor_version")
     testImplementation("io.insert-koin:koin-test:$koin_version")
     testImplementation("io.insert-koin:koin-test-junit5:$koin_version")
@@ -171,6 +173,8 @@ tasks {
 }
 
 tasks.test {
+    // Needed to run TestContainer for Postgresql
+    environment("TESTCONTAINERS_RYUK_DISABLED", "true")
     finalizedBy(tasks.jacocoTestReport)
 }
 

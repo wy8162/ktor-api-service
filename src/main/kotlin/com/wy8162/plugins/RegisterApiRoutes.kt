@@ -56,7 +56,7 @@ private fun Route.apiV1Route() {
             call.application.log.info("${call.request.uri} ($time)")
         }
         get("/{userId}") {
-            val ctx = ApiContext{}
+            val ctx = ApiContext {}
             ctx.call = call
 
             MDC.put("status", "beginning")

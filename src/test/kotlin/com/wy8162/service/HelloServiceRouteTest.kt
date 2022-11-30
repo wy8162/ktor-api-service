@@ -43,7 +43,12 @@ internal class HelloServiceRouteTest : BaseIntegrationTest() {
         }
 
         assertThat(response.status).isEqualTo(HttpStatusCode.OK)
-        val message = response.body<HelloMessage>()
-        assertThat(message.message).isEqualTo("This is a test")
+        val message = response.body<HelloResponse>()
+        assertThat(message.message.message).isEqualTo("This is a test")
     }
+
+    internal class HelloResponse(
+        val message: HelloMessage,
+        val hello: String
+    )
 }
