@@ -5,8 +5,11 @@ import org.junit.jupiter.api.extension.AfterAllCallback
 import org.junit.jupiter.api.extension.BeforeAllCallback
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.testcontainers.containers.PostgreSQLContainer
-import java.lang.String
 
+/**
+ * JUnit 5 extension. For BaseIntegrationTest.kt for usage (being commented out in favor to
+ * @Container and @TestContainers).
+ */
 class PostgresqlTestServerExtension private constructor() : BeforeAllCallback, AfterAllCallback {
     private val logger = getLogger()
 
