@@ -20,19 +20,24 @@ import io.ktor.server.testing.testApplication
 import io.mockk.mockkClass
 import org.flywaydb.core.Flyway
 import org.jetbrains.exposed.sql.Database
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.RegisterExtension
 import org.koin.test.KoinTest
 import org.koin.test.junit5.KoinTestExtension
 import org.koin.test.junit5.mock.MockProviderExtension
+import org.testcontainers.containers.PostgreSQLContainer
+import org.testcontainers.junit.jupiter.Container
+import org.testcontainers.junit.jupiter.Testcontainers
+import java.lang.String
 
+@Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 open class BaseIntegrationTest : KoinTest {
-    @JvmField
-    @RegisterExtension
-    val dbServer = PostgresqlTestServerExtension.create()
+//    @JvmField
+//    @RegisterExtension
+//    val dbServer = PostgresqlTestServerExtension.create()
+    @Container
+    val dbServer = PostgreSQLContainer("postgres:latest")
 
     @JvmField
     @RegisterExtension
@@ -48,13 +53,13 @@ open class BaseIntegrationTest : KoinTest {
 
     // Make sure the PostgresqlTestServerExtension beforeAll and afterAll methods
     // are called to start and stop Postgresql.
-    @BeforeAll
-    fun setup() {
-    }
-
-    @AfterAll
-    fun tearDown() {
-    }
+//    @BeforeAll
+//    fun setup() {
+//    }
+//
+//    @AfterAll
+//    fun tearDown() {
+//    }
 
     open fun runTest(block: suspend ApplicationTestBuilder.(httpClient: HttpClient) -> Unit) =
         testApplication {
@@ -84,9 +89,9 @@ open class BaseIntegrationTest : KoinTest {
     private fun Application.initializeTestDatabase() {
         val databaseResource = HikariDataSource(
             HikariConfig().apply {
-                jdbcUrl = dbServer.getDatabaseJdbcUrl()
-                username = dbServer.getUserName()
-                password = dbServer.getPassword()
+                jdbcUrl = String.format("jdbc:postgresql://${dbServer.host}:${dbServer.getMappedPort(5432)}/${dbServer.databaseName}")
+                username = dbServer.username
+                password = dbServer.password
                 driverClassName = "org.postgresql.Driver"
                 validate()
             }
@@ -98,9 +103,9 @@ open class BaseIntegrationTest : KoinTest {
             Flyway.configure()
                 .baselineOnMigrate(true)
                 .dataSource(
-                    dbServer.getDatabaseJdbcUrl(),
-                    dbServer.getUserName(),
-                    dbServer.getPassword()
+                    String.format("jdbc:postgresql://${dbServer.host}:${dbServer.getMappedPort(5432)}/${dbServer.databaseName}"),
+                    dbServer.username,
+                    dbServer.password
                 )
         ).migrate()
     }

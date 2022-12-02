@@ -135,6 +135,7 @@ dependencies {
 
     // Test
     implementation("org.testcontainers:postgresql:1.17.6")
+    implementation("org.testcontainers:junit-jupiter:1.17.6")
 
     testImplementation("io.ktor:ktor-server-test-host:$ktor_version")
     testImplementation("io.insert-koin:koin-test:$koin_version")

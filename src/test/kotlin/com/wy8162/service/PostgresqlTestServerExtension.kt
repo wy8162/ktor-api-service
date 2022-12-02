@@ -25,7 +25,7 @@ class PostgresqlTestServerExtension private constructor() : BeforeAllCallback, A
     fun getHost() = postgresqlContainer.host
     fun getPassword() = postgresqlContainer.password
     fun getPort() = postgresqlContainer.getMappedPort(5432)
-    fun getUserName() = postgresqlContainer.getUsername()
+    fun getUserName() = postgresqlContainer.username
     fun getDatabaseJdbcUrl() = String.format("jdbc:postgresql://${postgresqlContainer.host}:${getPort()}/${postgresqlContainer.databaseName}")
     fun getDatabaseR2dbcUrl() = String.format("r2dbc:pool:postgresql://${postgresqlContainer.username}:${postgresqlContainer.password}@${postgresqlContainer.host}:${getPort()}/${postgresqlContainer.databaseName}")
 
